@@ -256,7 +256,7 @@ Install Supervisor to manage processes.
 sudo apt install -y supervisor 
 sudo systemctl is-enabled supervisor
 ```
-### Prepare Your Site for Production
+# Setting ERPNext for Production
 Activate the scheduler for your site.
 ```
 bench --site asmtech.co.rw enable-scheduler
@@ -310,35 +310,58 @@ When this completes doing the settings, your instance is now on production mode 
 
 This also will mean that your instance will start automatically even in the event you restart the server.
 
-Default User is Administrator and use password you entered while creating new site.
+# Setup Multitenancy
+#### DNS based multitenancy 
+You can name your sites as the hostnames that would resolve to it. Thus, all the sites you add to the bench would run on the same port and will be automatically selected based on the hostname.
+
+To make a new site under DNS based multitenancy, perform the following steps.
+
+### STEP 1 ~ Switch on DNS based multitenancy (once)
+```
+bench config dns_multitenant on
+```   
+### STEP 2 ~ Create a new site
+```
+bench new-site site2name
+```  
+### STEP 2 ~ Re generate nginx config
+```
+bench setup nginx
+```
+### STEP 3 ~ Reload nginx
+```
+sudo service nginx reload
+```
+# Adding a Domain with SSL to your Site
+### Add Domain
+```
+bench setup add-domain asmtech.co.rw
+```
+### Install Let's Encrypt Certificate
+#### Install snapd on your machine
+```
+sudo apt install snapd
+```
+#### Update snapd
+```
+sudo snap install core;
+sudo snap refresh core
+```
+### Remove existing installations of certbot
+```
+sudo apt remove certbot
+```
+### Install certbot
+```
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+### Get Certificate
+```
+sudo -H bench setup lets-encrypt asmtech.co.rw
+```
+You will be faced with several prompts, respond to them accordingly. This command will also add an entry to the crontab of the root user (this requires elevated permissions), that will attempt to renew the certificate every month.
 
 Open url http://asmtech.co.rw to login 
 
-### Install SSL Certificate from Letsencrpt
-We secure the ERP Application with SSL certificate
-
-```
-sudo apt-get remove certbot
-```
-```
-sudo snap install core
-```
-```
-sudo snap refresh core
-```
-```
-sudo snap install --classic certbot
-```
-```
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-```
-```
-sudo certbot --nginx -d asmtech.co.rw
-```
-```
-sudo systemctl reload nginx
-```
-
-### To setup multitenancy check out this link
-- https://frappeframework.com/docs/v15/user/en/bench/guides/setup-multitenancy
-- https://github.com/frappe/bench/wiki/Multitenant-Setup
+Default User is Administrator and use password you entered while creating new site.
