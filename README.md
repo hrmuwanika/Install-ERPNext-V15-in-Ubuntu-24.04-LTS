@@ -1,4 +1,5 @@
-# Installing ERPNext Frappe on Ubuntu 24.04 LTS
+# How To Install ERPNext 15 on Ubuntu 24.04 LTS
+A complete Guide on How to Install Frappe/ERPNext version 15 in Ubuntu 24.04 LTS
 
 ## Software Requirements
 - Updated Ubuntu 24.04
@@ -201,7 +202,7 @@ bench set-mariadb-host 10.11.12.30
 ```
 Replace amjid with your desired site name. and the IP Address with your ip
 ```
-bench new-site asmtech.co.rw --db-host 10.11.12.30 --db-port 3306 --db-root-username amjid  --mariadb-user-host-login-scope='%'
+bench new-site abc.co.rw --db-host 10.11.12.30 --db-port 3306 --db-root-username amjid  --mariadb-user-host-login-scope='%'
 ```
 Provide the MariaDB credentials when prompted.
 
@@ -211,27 +212,27 @@ Provide the MariaDB credentials when prompted.
 > Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
 Set up a new site with the following command.
 ```    
-bench new-site asmtech.co.rw --db-name asmtech_db
-bench --site asmtech.co.rw add-to-hosts
-bench use asmtech.co.rw
+bench new-site abc.co.rw --db-name abc_db
+bench --site abc.co.rw add-to-hosts
+bench use abc.co.rw
 ```
 ### Install Standard and Custom Apps from GitHub(Optional)
 > Install a Standard App
 To install a standard app from the Frappe ecosystem, run:
 ```
 bench get-app erpnext --branch version-15
-bench get-app payments
-bench get-app hrms
+bench get-app payments --branch version-15
+bench get-app hrms --branch version-15
 ```
 ```
-bench --site asmtech.co.rw install-app erpnext
-bench --site asmtech.co.rw install-app payments
-bench --site asmtech.co.rw install-app hrms
+bench --site abc.co.rw install-app erpnext
+bench --site abc.co.rw install-app payments
+bench --site abc.co.rw install-app hrms
 ```
 ```    
 bench start
 ```
-### Install and Configure Additional Tools
+# Install and Configure Additional Tools
 > Install Ansible (Python Package)
 > Install Ansible to manage automation tasks.
 ```
@@ -259,12 +260,12 @@ sudo systemctl is-enabled supervisor
 # Setting ERPNext for Production
 Activate the scheduler for your site.
 ```
-bench --site asmtech.co.rw enable-scheduler
+bench --site abc.co.rw enable-scheduler
 ```
 > Set Maintenance Mode off
 Disable maintenance mode to make your site accessible.
 ```
-bench --site asmtech.co.rw set-maintenance-mode off
+bench --site abc.co.rw set-maintenance-mode off
 ```   
 ### Setup NGINX and supervisor to apply the changes
 ```
@@ -316,18 +317,10 @@ You can name your sites as the hostnames that would resolve to it. Thus, all the
 
 To make a new site under DNS based multitenancy, perform the following steps.
 
-### STEP 1 ~ Switch on DNS based multitenancy (once)
+### Switch on DNS based multitenancy (once)
 ```
 bench config dns_multitenant on
 ```   
-### STEP 2 ~ Create a new site
-```
-bench new-site site2name
-```  
-### STEP 2 ~ Re generate nginx config
-```
-bench setup nginx
-```
 ### STEP 3 ~ Reload nginx
 ```
 sudo service nginx reload
@@ -335,12 +328,12 @@ sudo service nginx reload
 # Adding a Domain with SSL to your Site
 ### Add Domain
 ```
-bench setup add-domain asmtech.co.rw
+bench setup add-domain tenant1.abc.co.rw
 ```
 ### Install Let's Encrypt Certificate
 #### Install snapd on your machine
 ```
-sudo apt install snapd
+sudo apt install -y snapd
 ```
 #### Update snapd
 ```
@@ -358,10 +351,10 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 ### Get Certificate
 ```
-sudo -H bench setup lets-encrypt asmtech.co.rw
+sudo -H bench setup lets-encrypt abc.co.rw
 ```
 You will be faced with several prompts, respond to them accordingly. This command will also add an entry to the crontab of the root user (this requires elevated permissions), that will attempt to renew the certificate every month.
 
-Open url http://asmtech.co.rw to login 
+Open url https://abc.co.rw to login 
 
 Default User is Administrator and use password you entered while creating new site.
