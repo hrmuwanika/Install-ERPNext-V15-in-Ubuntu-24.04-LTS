@@ -200,9 +200,9 @@ Set mariadb host
 ```
 bench set-mariadb-host 10.11.12.30
 ```
-Replace amjid with your desired site name. and the IP Address with your ip
+Replace moses with your desired site name. and the IP Address with your ip
 ```
-bench new-site abc.co.rw --db-host 10.11.12.30 --db-port 3306 --db-root-username amjid  --mariadb-user-host-login-scope='%'
+bench new-site abc.co.rw --db-host 10.11.12.30 --db-port 3306 --db-root-username moses  --mariadb-user-host-login-scope='%'
 ```
 Provide the MariaDB credentials when prompted.
 
@@ -270,10 +270,12 @@ bench --site abc.co.rw set-maintenance-mode off
 ### Setup NGINX and supervisor to apply the changes
 ```
 sudo bench setup supervisor
-```
-```
 sudo bench setup nginx
 ```
+### Restart Supervisor and nginx 
+```
+sudo systemctl restart nginx supervisor
+```    
 Remove the standard nginx sites. To avoid conflict and to avoid security vunlerabities 
 ```
 sudo rm /etc/nginx/sites-available/default
@@ -293,17 +295,10 @@ bench restart
 ```
 > And that’s it! You’ve successfully installed ERPNext Version 15 on Ubuntu 24. Your system is now ready for use.
 
-### Restart Supervisor and nginx 
-```
-sudo systemctl restart nginx supervisor
-```    
-Verify services managed by nginx
+Verify services managed by nginx and supervisor
 
 ```
 sudo systemctl status nginx
-```
-Verify services managed by supervisord
-```
 sudo supervisorctl status
 ```
 
