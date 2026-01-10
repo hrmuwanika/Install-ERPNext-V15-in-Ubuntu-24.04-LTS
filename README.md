@@ -1,5 +1,5 @@
-# How To Install ERPNext 15 on Ubuntu 24.04 LTS
-A complete Guide on How to Install Frappe/ERPNext version 15 in Ubuntu 24.04 LTS
+# How To Install ERPNext 16 on Ubuntu 24.04 LTS
+A complete Guide on How to Install Frappe/ERPNext version 16 in Ubuntu 24.04 LTS
 
 ## Software Requirements
 - Updated Ubuntu 24.04
@@ -33,7 +33,8 @@ A complete Guide on How to Install Frappe/ERPNext version 15 in Ubuntu 24.04 LTS
 ### Update and Upgrade Packages
 First, update your package list and upgrade your installed packages to ensure you’re starting with the latest versions.
 ```
-sudo apt update -y && sudo apt upgrade -y
+sudo apt update -y
+sudo apt upgrade -y
 ```
 ### Install ufw 
 ```
@@ -55,6 +56,7 @@ sudo useradd -m frappe -s /bin/bash
 sudo usermod -aG sudo frappe
 sudo passwd frappe
 su - frappe
+cd /home/frappe
 ```    
 ### Install git
 Git is required for version control and to clone repositories.
@@ -62,18 +64,18 @@ Git is required for version control and to clone repositories.
 sudo apt install -y git
 ```
 ### Install -y python3-dev 
-Install Python 3.12 and its development tools.
+Install Python 3.13 and its development tools.
 ```
 sudo apt install -y python3-dev 
 ```
 ### Install setuptools and pip (Python's Package Manager).
 ```
-sudo apt install -y python3-setuptools python3-pip 
+sudo apt install -y python3-setuptools python3-pip
 ```
 ### Install virtualenv
-Set up a virtual environment for Python 3.12.
+Set up a virtual environment for Python 3.
 ``` 
-sudo apt install -y python3.12-venv
+sudo apt install -y python3.13-venv
 ```
 ### Install Common Software Properties
 Install the necessary software properties.
@@ -83,7 +85,8 @@ sudo apt install -y software-properties-common
 ### Install MariaDB
 MariaDB is the database management system used by ERPNext.
 ```
-sudo apt install -y libmariadb-dev mariadb-server pkg-config
+sudo apt install -y libmariadb-dev pkg-config
+sudo apt install -y mariadb-server
 ```
 ### Enabling Mariadb boots 
 ```
@@ -149,19 +152,17 @@ sudo systemctl start redis-server
 ### Install Node.js 20.X package
 Curl is required for downloading files and setting up Node.js.
 ```
-sudo apt install -y curl 
+sudo apt install -y curl ca-certificates gnupg
 ```
 ### Install Node.js
-Use NVM (Node Version Manager) to install Node.js version 18.
+Use NVM (Node Version Manager) to install Node.js version 22.
 ```
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-source ~/.profile
-nvm install 20 
+sudo apt remove nodejs npm -y
+sudo apt autoremove -y
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
 ```
-### Install Npm and yarn
-Install npm, the Node.js package manager.
-```
-sudo apt install -y npm
+
 ```
 Install Yarn, a fast and reliable JavaScript package manager.
 ```
