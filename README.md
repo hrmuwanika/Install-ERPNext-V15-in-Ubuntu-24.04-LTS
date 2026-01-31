@@ -203,7 +203,7 @@ bench set-mariadb-host 10.11.12.30
 ```
 Replace moses with your desired site name. and the IP Address with your ip
 ```
-bench new-site abc.co.rw --db-host 10.11.12.30 --db-port 3306 --db-root-username moses  --mariadb-user-host-login-scope='%'
+bench new-site abc.com --db-host 10.11.12.30 --db-port 3306 --db-root-username moses  --mariadb-user-host-login-scope='%'
 ```
 Provide the MariaDB credentials when prompted.
 
@@ -213,9 +213,9 @@ Provide the MariaDB credentials when prompted.
 > Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
 Set up a new site with the following command.
 ```    
-bench new-site abc.co.rw --db-name abc_db
-bench --site abc.co.rw add-to-hosts
-bench use abc.co.rw
+bench new-site site1.abc.com --db-name abc_db
+bench --site site1.abc.com add-to-hosts
+bench use site1.abc.com
 ```
 ### Install Standard and Custom Apps from GitHub(Optional)
 > Install a Standard App
@@ -226,9 +226,9 @@ bench get-app payments --branch version-15
 bench get-app hrms --branch version-15
 ```
 ```
-bench --site abc.co.rw install-app erpnext
-bench --site abc.co.rw install-app payments
-bench --site abc.co.rw install-app hrms
+bench --site site1.abc.com install-app erpnext
+bench --site site1.abc.com install-app payments
+bench --site site1.abc.com install-app hrms
 ```
 ```    
 bench start
@@ -261,12 +261,12 @@ sudo systemctl is-enabled supervisor
 # Setting ERPNext for Production
 Activate the scheduler for your site.
 ```
-bench --site abc.co.rw enable-scheduler
+bench --site site1.abc.com enable-scheduler
 ```
 > Set Maintenance Mode off
 Disable maintenance mode to make your site accessible.
 ```
-bench --site abc.co.rw set-maintenance-mode off
+bench --site site1.abc.com set-maintenance-mode off
 ```   
 ### Setup NGINX and supervisor to apply the changes
 ```
