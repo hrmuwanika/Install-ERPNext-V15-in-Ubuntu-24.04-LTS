@@ -212,7 +212,8 @@ Provide the MariaDB credentials when prompted.
 ### Note 
 > Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
 Set up a new site with the following command.
-```    
+
+```
 bench new-site site1.abc.com --db-name abc_db
 bench --site site1.abc.com add-to-hosts
 bench use site1.abc.com
@@ -222,13 +223,15 @@ bench use site1.abc.com
 To install a standard app from the Frappe ecosystem, run:
 ```
 bench get-app erpnext --branch version-15
-bench get-app payments --branch version-15
-bench get-app hrms --branch version-15
+bench get-app payments 
+bench get-app hrms
+bench get-app non_profit
 ```
 ```
 bench --site site1.abc.com install-app erpnext
 bench --site site1.abc.com install-app payments
 bench --site site1.abc.com install-app hrms
+bench --site site1.abc.com install-app non_profit
 ```
 ```    
 bench start
