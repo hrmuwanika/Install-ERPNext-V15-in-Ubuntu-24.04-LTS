@@ -170,6 +170,9 @@ Setting ERPNext for Production
 
 ### STEP 19 Setup Production Config
     sudo bench setup production frappe-user
+    bench setup supervisor
+    sudo ln -s `pwd`/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
+
     bench setup nginx
 
 ### STEP 20 Restart Supervisor:
