@@ -48,7 +48,9 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
 ### STEP 7 Install MariaDB
     sudo apt-get install software-properties-common -y
     sudo apt install mariadb-server -y
-    sudo systemctl status mariadb
+    
+    sudo systemctl start mariadb
+    sudo systemctl enable mariadb
     sudo mysql_secure_installation
     
     
@@ -87,9 +89,6 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
        Reload privilege tables now? [Y/n] Y
        ... Success!
 
- 
-    
-    
     
 ### STEP 8  MySQL database development files
     sudo apt-get install libmysqlclient-dev -y
@@ -127,7 +126,9 @@ add this to the 50-server.cnf file
 
 ### STEP 10 install Redis
     sudo apt-get install redis-server -y
-
+    sudo systemctl start redis-server
+    sudo systemctl enable redis-server
+    
 ### STEP 11 install Node.js 18.X package
     sudo apt install curl -y
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
@@ -143,11 +144,13 @@ add this to the 50-server.cnf file
 
 ### STEP 14 install frappe-bench
     sudo -H pip3 install frappe-bench --break-system-packages
+    sudo -H pip3 install ansible --break-system-packages
     bench --version
     
 ### STEP 15 initilise the frappe bench & install frappe latest version 
     bench init frappe-bench --frappe-branch version-15
     cd frappe-bench/
+    chmod -R o+rx /home/frappe-user
     bench start
     
 ### STEP 16 create a site in frappe bench 
@@ -175,10 +178,30 @@ Open url http://dcode.com:8000 to login
 
     bench get-app non_profit
     bench --site dcode.com install-app non_profit
-    
+
+    bench get-app https://github.com/erpchampions/uganda_compliance
+    bench --site dcode.com install-app uganda_compliance
+
+    bench --site dcode.com migrate
     bench start
     
+Deploying ERPNext in Production Mode
+
+### STEP 18 Enable Scheduler and Disable Maintenance Mode   
+    bench --site dcode.com enable-scheduler
+    bench --site dcode.com set-maintenance-mode off
+
+### STEP 19 Setup Production Config
+    sudo bench setup production frappe-user
+    bench setup nginx
+
+### STEP 20 Restart Supervisor:
+    sudo supervisorctl restart all
+    sudo bench setup production frappe-user
+
     
+Open url http://dcode.com without the port to login
+
 
 
     
