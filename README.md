@@ -28,10 +28,10 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo apt-get update -y && sudo apt-get upgrade -y
 
 ### STEP 2 Create a New Sudo User
-    sudo adduser frappe-user
-    sudo usermod -aG sudo frappe-user
-    su frappe-user
-    cd /home/frappe-user
+    sudo adduser frappe
+    sudo usermod -aG sudo frappe
+    su frappe
+    cd /home/frappe
 
 ### STEP 3 Install git
     sudo apt-get install git -y
@@ -128,7 +128,7 @@ add this to the 50-server.cnf file
 ### STEP 15 initilise the frappe bench & install frappe latest version 
     bench init frappe-bench --frappe-branch version-15
     cd frappe-bench/
-    chmod -R o+rx /home/frappe-user
+    chmod -R o+rx /home/frappe
     bench start
     
 ### STEP 16 create a site in frappe bench 
@@ -147,13 +147,13 @@ Open url http://dcode.com:8000 to login
     bench get-app erpnext --branch version-15
     bench --site dcode.com install-app erpnext
 
-    bench get-app hrms --branch version-15
+    bench get-app hrms
     bench --site dcode.com install-app hrms
 
-    bench get-app payments --branch version-15
+    bench get-app payments
     bench --site dcode.com install-app payments
 
-    bench get-app non_profit --branch version-15
+    bench get-app non_profit
     bench --site dcode.com install-app non_profit
 
     bench get-app https://github.com/erpchampions/uganda_compliance
@@ -169,7 +169,7 @@ Setting ERPNext for Production
     bench --site dcode.com set-maintenance-mode off
 
 ### STEP 19 Setup Production Config
-    sudo bench setup production frappe-user
+    sudo bench setup production frappe
     bench setup supervisor
     sudo ln -s `pwd`/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
 
