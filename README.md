@@ -51,43 +51,8 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     
     sudo systemctl start mariadb
     sudo systemctl enable mariadb
+    
     sudo mysql_secure_installation
-    
-    
-      In order to log into MariaDB to secure it, we'll need the current
-      password for the root user. If you've just installed MariaDB, and
-      haven't set the root password yet, you should just press enter here.
-
-      Enter current password for root (enter for none): # PRESS ENTER
-      OK, successfully used password, moving on...
-      
-      
-      Switch to unix_socket authentication [Y/n] Y
-      Enabled successfully!
-      Reloading privilege tables..
-       ... Success!
- 
-      Change the root password? [Y/n] Y
-      New password: 
-      Re-enter new password: 
-      Password updated successfully!
-      Reloading privilege tables..
-       ... Success!
-
-      Remove anonymous users? [Y/n] Y
-       ... Success!
- 
-       Disallow root login remotely? [Y/n] Y
-       ... Success!
-
-       Remove test database and access to it? [Y/n] Y
-       - Dropping test database...
-       ... Success!
-       - Removing privileges on test database...
-       ... Success!
- 
-       Reload privilege tables now? [Y/n] Y
-       ... Success!
 
     
 ### STEP 8  MySQL database development files
