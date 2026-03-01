@@ -139,7 +139,7 @@ add this to the 50-server.cnf file
 >Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
     
     bench new-site dcode.com
-    bench --site dcode.com add-to-hosts
+    bench use dcode.com 
 
 Open url http://dcode.com:8000 to login 
 
@@ -162,7 +162,6 @@ Open url http://dcode.com:8000 to login
     bench --site dcode.com install-app uganda_compliance
 
     bench --site dcode.com migrate
-    bench use dcode.com
     bench start
     
 Setting ERPNext for Production
