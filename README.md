@@ -37,17 +37,17 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo apt-get install git -y
 
 ### STEP 4 install python-dev
-    sudo apt-get install python3-dev -y
+    sudo apt-get install python3-dev python3.12-dev -y
 
 ### STEP 5 Install setuptools and pip (Python's Package Manager).
     sudo apt-get install python3-setuptools python3-pip -y
 
 ### STEP 6 Install virtualenv
-    sudo apt install python3.12-venv -y
+    sudo apt-get install python3.12-venv -y
     
 ### STEP 7 Install MariaDB
     sudo apt-get install software-properties-common -y
-    sudo apt install mariadb-server -y
+    sudo apt-get install mariadb-server mariadb-client -y
     
     sudo systemctl start mariadb
     sudo systemctl enable mariadb
@@ -58,35 +58,30 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo apt-get install nginx -y
     sudo systemctl start nginx
     sudo systemctl enable nginx
-    
+
+### Install and setup Supervisor
+    sudo apt-get install supervisor -y
+    sudo systemctl start supervisor
+    sudo systemctl enable supervisor
+
+### Install Fail2ban
+    sudo apt-get install fail2ban -y
+    sudo systemctl start fail2ban
+    sudo systemctl enable fail2ban
+
 ### STEP 8  MySQL database development files
     sudo apt-get install libmysqlclient-dev -y
 
 ### STEP 9 Edit the mariadb configuration ( unicode character encoding )
-    sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+    sudo nano /etc/mysql/my.cnf
 
-add this to the 50-server.cnf file
-    
-    [server]
-    user = mysql
-    pid-file = /run/mysqld/mysqld.pid
-    socket = /run/mysqld/mysqld.sock
-    basedir = /usr
-    datadir = /var/lib/mysql
-    tmpdir = /tmp
-    lc-messages-dir = /usr/share/mysql
-    bind-address = 127.0.0.1
-    query_cache_size = 16M
-    log_error = /var/log/mysql/error.log
+add this to the my.cnf file
     
     [mysqld]
-    innodb-file-format=barracuda
-    innodb-file-per-table=1
-    innodb-large-prefix=1
     character-set-client-handshake = FALSE
     character-set-server = utf8mb4
-    collation-server = utf8mb4_unicode_ci      
-     
+    collation-server = utf8mb4_unicode_ci
+  
     [mysql]
     default-character-set = utf8mb4
 
@@ -135,7 +130,6 @@ Open url http://dcode.com:8000 to login
 
 ### STEP 17 install ERPNext latest version in bench & site
 
-    
     bench get-app erpnext --branch version-15
     bench --site dcode.com install-app erpnext
 
