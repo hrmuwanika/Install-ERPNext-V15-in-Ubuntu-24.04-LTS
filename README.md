@@ -28,7 +28,7 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo apt-get update -y && sudo apt-get upgrade -y
 
 ### STEP 2 Create a New Sudo User
-    sudo adduser rappe-user
+    sudo adduser frappe-user
     sudo usermod -aG sudo frappe-user
     su frappe-user
     cd /home/frappe-user
@@ -54,6 +54,10 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     
     sudo mysql_secure_installation
 
+### Install Nginx
+    sudo apt-get install nginx -y
+    sudo systemctl start nginx
+    sudo systemctl enable nginx
     
 ### STEP 8  MySQL database development files
     sudo apt-get install libmysqlclient-dev -y
