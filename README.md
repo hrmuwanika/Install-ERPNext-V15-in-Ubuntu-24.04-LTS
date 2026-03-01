@@ -22,29 +22,32 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
 
 > ## Note:
 > ubuntu 24.04 default python version is python3.12
-> 
 > ubuntu 24.04 default mariadb version is 10.11
 
-### STEP 1 Install git
-    sudo apt-get install git
+### STEP 1 Update and Upgrade Packages
+    sudo apt-get update -y && sudo apt-get upgrade -y
 
-### STEP 2 install python-dev
+### STEP 2 Create a New Sudo User
+    sudo adduser rappe-user
+    sudo usermod -aG sudo frappe-user
+    su frappe-user
+    cd /home/frappe-user
 
-    sudo apt-get install python3-dev
+### STEP 3 Install git
+    sudo apt-get install git -y
 
-### STEP 3 Install setuptools and pip (Python's Package Manager).
+### STEP 4 install python-dev
+    sudo apt-get install python3-dev -y
 
-    sudo apt-get install python3-setuptools python3-pip
+### STEP 5 Install setuptools and pip (Python's Package Manager).
+    sudo apt-get install python3-setuptools python3-pip -y
 
-### STEP 4 Install virtualenv
+### STEP 6 Install virtualenv
+    sudo apt install python3.12-venv -y
     
-    sudo apt install python3.12-venv
-    
-
-### STEP 5 Install MariaDB
-
-    sudo apt-get install software-properties-common
-    sudo apt install mariadb-server
+### STEP 7 Install MariaDB
+    sudo apt-get install software-properties-common -y
+    sudo apt install mariadb-server -y
     sudo systemctl status mariadb
     sudo mysql_secure_installation
     
@@ -88,16 +91,13 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     
     
     
-### STEP 6  MySQL database development files
+### STEP 8  MySQL database development files
+    sudo apt-get install libmysqlclient-dev -y
 
-    sudo apt-get install libmysqlclient-dev
-
-### STEP 7 Edit the mariadb configuration ( unicode character encoding )
-
+### STEP 9 Edit the mariadb configuration ( unicode character encoding )
     sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
 
 add this to the 50-server.cnf file
-
     
     [server]
     user = mysql
@@ -122,65 +122,59 @@ add this to the 50-server.cnf file
     [mysql]
     default-character-set = utf8mb4
 
-Now press (Ctrl-X) to exit
-
+### Now press (Ctrl-X) to exit
     sudo service mysql restart
 
-### STEP 8 install Redis
-    
-    sudo apt-get install redis-server
+### STEP 10 install Redis
+    sudo apt-get install redis-server -y
 
-### STEP 9 install Node.js 18.X package
-
-    sudo apt install curl 
+### STEP 11 install Node.js 18.X package
+    sudo apt install curl -y
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     source ~/.profile
     nvm install 18
 
-### STEP 10  install Yarn
+### STEP 12  install Yarn
+    sudo apt-get install npm -y
+    sudo npm install -g yarn -y
 
-    sudo apt-get install npm
+### STEP 13 install wkhtmltopdf
+    sudo apt-get install xvfb libfontconfig wkhtmltopdf -y
 
-    sudo npm install -g yarn
-
-### STEP 11 install wkhtmltopdf
-
-    sudo apt-get install xvfb libfontconfig wkhtmltopdf
-    
-
-### STEP 12 install frappe-bench
-
+### STEP 14 install frappe-bench
     sudo -H pip3 install frappe-bench --break-system-packages
-    
     bench --version
     
-### STEP 13 initilise the frappe bench & install frappe latest version 
-
+### STEP 15 initilise the frappe bench & install frappe latest version 
     bench init frappe-bench --frappe-branch version-15
-    
     cd frappe-bench/
     bench start
     
-### STEP 14 create a site in frappe bench 
+### STEP 16 create a site in frappe bench 
 
 >### Note 
 >Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
     
     bench new-site dcode.com
-    
     bench --site dcode.com add-to-hosts
 
 Open url http://dcode.com:8000 to login 
 
 
-### STEP 15 install ERPNext latest version in bench & site
+### STEP 17 install ERPNext latest version in bench & site
 
     
     bench get-app erpnext --branch version-15
-    ###OR
-    bench get-app https://github.com/frappe/erpnext --branch version-15
-
     bench --site dcode.com install-app erpnext
+
+    bench get-app hrms
+    bench --site dcode.com install-app hrms
+
+    bench get-app payments
+    bench --site dcode.com install-app payments
+
+    bench get-app non_profit
+    bench --site dcode.com install-app non_profit
     
     bench start
     
