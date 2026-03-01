@@ -148,9 +148,10 @@ Open url http://dcode.com:8000 to login
     bench --site dcode.com install-app uganda_compliance
 
     bench --site dcode.com migrate
+    bench use dcode.com
     bench start
     
-Deploying ERPNext in Production Mode
+Setting ERPNext for Production
 
 ### STEP 18 Enable Scheduler and Disable Maintenance Mode   
     bench --site dcode.com enable-scheduler
@@ -164,9 +165,16 @@ Deploying ERPNext in Production Mode
     sudo supervisorctl restart all
     sudo bench setup production frappe-user
 
-    
 Open url http://dcode.com without the port to login
 
+### STEP 21 Install Letsencrypt ssl certificate 
+    sudo apt install snapd -y
+    sudo snap install core; sudo snap refresh core 
+    sudo apt-get remove certbot -y
+    sudo snap install --classic certbot sudo ln -s /snap/bin/certbot /usr/bin/certbot 
+    sudo certbot --nginx -d dcode.com
+    
 
+Open url https://dcode.com without the port to login
 
     
