@@ -90,9 +90,7 @@ add this to the 50-server.cnf file
     log_error = /var/log/mysql/error.log
     
     [mysqld]
-    innodb-file-format=barracuda
     innodb-file-per-table=1
-    innodb-large-prefix=1
     character-set-client-handshake = FALSE
     character-set-server = utf8mb4
     collation-server = utf8mb4_unicode_ci      
@@ -111,13 +109,13 @@ add this to the 50-server.cnf file
     
 ### STEP 11 install Node.js 18.X package
     sudo apt install curl -y
-    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
     source ~/.profile
     nvm install 18
 
 ### STEP 12  install Yarn
     sudo apt-get install npm -y
-    sudo npm install -g yarn -y
+    sudo npm install -g yarn 
 
 ### STEP 13 install wkhtmltopdf
     sudo apt-get install xvfb libfontconfig wkhtmltopdf -y
@@ -149,13 +147,13 @@ Open url http://dcode.com:8000 to login
     bench get-app erpnext --branch version-15
     bench --site dcode.com install-app erpnext
 
-    bench get-app hrms
+    bench get-app hrms --branch version-15
     bench --site dcode.com install-app hrms
 
-    bench get-app payments
+    bench get-app payments --branch version-15
     bench --site dcode.com install-app payments
 
-    bench get-app non_profit
+    bench get-app non_profit --branch version-15
     bench --site dcode.com install-app non_profit
 
     bench get-app https://github.com/erpchampions/uganda_compliance
@@ -176,7 +174,6 @@ Setting ERPNext for Production
 
 ### STEP 20 Restart Supervisor:
     sudo supervisorctl restart all
-    sudo bench setup production frappe-user
 
 Open url http://dcode.com without the port to login
 
@@ -184,7 +181,8 @@ Open url http://dcode.com without the port to login
     sudo apt install snapd -y
     sudo snap install core; sudo snap refresh core 
     sudo apt-get remove certbot -y
-    sudo snap install --classic certbot sudo ln -s /snap/bin/certbot /usr/bin/certbot 
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot 
     sudo certbot --nginx -d dcode.com
     
 
