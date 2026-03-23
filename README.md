@@ -30,24 +30,24 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
 ### STEP 2 Create a New Sudo User
     sudo adduser frappe
     sudo usermod -aG sudo frappe
-    su frappe
+    su - frappe
     cd /home/frappe
 
 ### STEP 3 Install git
-    sudo apt-get install git -y
+    sudo apt-get install -y git pkg-config
 
 ### STEP 4 install python-dev
-    sudo apt-get install python3-dev python3.12-dev -y
+    sudo apt-get install -y python3-dev python3.12-dev
 
 ### STEP 5 Install setuptools and pip (Python's Package Manager).
-    sudo apt-get install python3-setuptools python3-pip -y
+    sudo apt-get install -y python3-setuptools python3-pip
 
 ### STEP 6 Install virtualenv
-    sudo apt-get install python3.12-venv -y
+    sudo apt-get install -y python3.12-venv 
     
 ### STEP 7 Install MariaDB
-    sudo apt-get install software-properties-common -y
-    sudo apt-get install mariadb-server mariadb-client -y
+    sudo apt-get install -y software-properties-common 
+    sudo apt-get install -y mariadb-server mariadb-client libmariadb-dev 
     
     sudo systemctl start mariadb
     sudo systemctl enable mariadb
@@ -72,53 +72,53 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
 ### STEP 8  MySQL database development files
     sudo apt-get install libmysqlclient-dev -y
 
-### STEP 9 Edit the mariadb configuration ( unicode character encoding )
+### STEP 9 Open the MariaDB server configuration , Update the bind-address:
     sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
 
 add this to the 50-server.cnf file
     
     [server]
-    user = mysql
-    pid-file = /run/mysqld/mysqld.pid
-    socket = /run/mysqld/mysqld.sock
-    basedir = /usr
-    datadir = /var/lib/mysql
-    tmpdir = /tmp
-    lc-messages-dir = /usr/share/mysql
     bind-address = 127.0.0.1
-    query_cache_size = 16M
-    log_error = /var/log/mysql/error.log
-    
+
+### Then, update character sets for compatibility:
+    sudo nano /etc/mysql/my.cnf
+
     [mysqld]
-    innodb-file-per-table=1
     character-set-client-handshake = FALSE
     character-set-server = utf8mb4
-    collation-server = utf8mb4_unicode_ci      
+    collation-server = utf8mb4_unicode_ci
      
     [mysql]
     default-character-set = utf8mb4
 
 
 ### Now press (Ctrl-X) to exit
-    sudo service mysql restart
+    sudo systemctl restart mariadb
 
 ### STEP 10 install Redis
     sudo apt-get install redis-server -y
     sudo systemctl start redis-server
     sudo systemctl enable redis-server
     
-### STEP 11 install Node.js 18.X package
+### STEP 11 install Node.js 24.X package
     sudo apt install curl -y
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
     source ~/.profile
-    nvm install 18
+    nvm install 24
 
 ### STEP 12  install Yarn
-    sudo apt-get install npm -y
+    npm install -g npm@11.4.2
     sudo npm install -g yarn 
 
-### STEP 13 install wkhtmltopdf
-    sudo apt-get install xvfb libfontconfig wkhtmltopdf -y
+### STEP 13 install wkhtmltopdf (used for PDF reports in ERPNext)
+    sudo apt-get install -y xvfb libfontconfig
+    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    sudo apt install -f -y
+    
+### Create Python Virtual Environment and Install Frappe Bench
+    python3 -m venv myenv
+    source myenv/bin/activate
 
 ### STEP 14 install frappe-bench
     sudo -H pip3 install frappe-bench --break-system-packages
@@ -128,8 +128,7 @@ add this to the 50-server.cnf file
 ### STEP 15 initilise the frappe bench & install frappe latest version 
     bench init frappe-bench --frappe-branch version-15
     cd frappe-bench/
-    chmod -R o+rx /home/frappe
-    bench start
+    chmod -R o+rx /home/frappe/
     
 ### STEP 16 create a site in frappe bench 
 
@@ -137,14 +136,11 @@ add this to the 50-server.cnf file
 >Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
     
     bench new-site dcode.com
-    bench use dcode.com 
+    bench --site dcode.com add-to-hosts
 
-Open url http://dcode.com:8000 to login 
+### STEP 17 install ERPNext latest version in bench & site apps
 
-
-### STEP 17 install ERPNext latest version in bench & site
-
-    bench get-app erpnext --branch version-15
+    bench get-app erpnext --branch v15.67.0 https://github.com/frappe/erpnext.git
     bench --site dcode.com install-app erpnext
 
     bench get-app hrms
@@ -160,7 +156,6 @@ Open url http://dcode.com:8000 to login
     bench --site dcode.com install-app uganda_compliance
 
     bench --site dcode.com migrate
-    bench start
     
 Setting ERPNext for Production
 
@@ -168,21 +163,23 @@ Setting ERPNext for Production
     bench --site dcode.com enable-scheduler
     bench --site dcode.com set-maintenance-mode off
 
-### STEP 19 Setup Production Config
-    sudo bench setup production frappe
-    bench setup supervisor
-    sudo ln -s `pwd`/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
-
+### STEP 19 Setup Production
+    bench setup env --python PATH="$PATH"
+    sudo -E env PATH="$PATH" bench setup sudoers $(whoami)
+    sudo -E env PATH="$PATH" bench setup production frappe
+    sudo systemctl reload nginx
+    
+### STEP 20 Configure NGINX and Supervisor:
     bench setup nginx
-
-### STEP 20 Restart Supervisor:
+    sudo supervisorctl restart all
+    sudo -E env PATH="$PATH" bench setup production frappe
+    sudo systemctl reload nginx    
     sudo supervisorctl restart all
 
-Open url http://dcode.com without the port to login
-
 ### STEP 21 Install Letsencrypt ssl certificate 
-    sudo apt install snapd -y
-    sudo snap install core; sudo snap refresh core 
+    sudo apt-get install -y snapd
+    sudo snap install core 
+    sudo snap refresh core 
     sudo apt-get remove certbot -y
     sudo snap install --classic certbot
     sudo ln -s /snap/bin/certbot /usr/bin/certbot 
