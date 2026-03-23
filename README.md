@@ -81,7 +81,7 @@ add this to the 50-server.cnf file
     bind-address = 127.0.0.1
 
 ### Then, update character sets for compatibility:
-    sudo bash -c 'cat << EOF >> /etc/mysql/my.cnf
+    sudo cat << EOF >> /etc/mysql/my.cnf
 
     [mysqld]
     character-set-client-handshake = FALSE
@@ -112,12 +112,11 @@ add this to the 50-server.cnf file
 
 ### STEP 13 install wkhtmltopdf (used for PDF reports in ERPNext)
     sudo apt-get install -y fontconfig libxrender1 xfonts-75dpi xfonts-base
-    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_"$arch".deb && \
-    sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_"$arch".deb || true && \
-    sudo cp /usr/local/bin/wkhtmlto* /usr/bin/ && \
-    sudo chmod a+x /usr/bin/wk* && \
-    sudo rm wkhtmltox_0.12.6.1-2.jammy_"$arch".deb && \
-    sudo apt --fix-broken install -y && \
+    sudo wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb 
+    sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    sudo apt install -f
+    sudo cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
+    sudo cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
     sudo apt install -y fontconfig xvfb libfontconfig xfonts-base xfonts-75dpi libxrender1 
 
     
@@ -145,7 +144,7 @@ add this to the 50-server.cnf file
 
 ### STEP 17 install ERPNext latest version in bench & site apps
 
-    bench get-app erpnext --branch v15.67.0 https://github.com/frappe/erpnext.git
+    bench get-app --branch version-15 erpnext
     bench --site dcode.com install-app erpnext
 
     bench get-app hrms
