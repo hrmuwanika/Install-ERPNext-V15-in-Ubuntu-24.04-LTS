@@ -132,7 +132,7 @@ add this to the 50-server.cnf file
 ### STEP 15 initilise the frappe bench & install frappe latest version 
     bench init frappe-bench --frappe-branch version-15
     cd frappe-bench/
-    chmod -R o+rx /home/frappe/
+    sudo chmod -R o+rx /home/frappe/
     
 ### STEP 16 create a site in frappe bench 
 
