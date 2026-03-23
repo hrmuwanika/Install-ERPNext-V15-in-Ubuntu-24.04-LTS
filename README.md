@@ -156,9 +156,13 @@ add this to the 50-server.cnf file
     bench get-app non_profit
     bench --site dcode.com install-app non_profit
 
+    bench get-app ury https://github.com/ury-erp/ury.git
+    bench --site dcode.com install-app ury
+
     bench get-app https://github.com/erpchampions/uganda_compliance
     bench --site dcode.com install-app uganda_compliance
 
+    bench --site dcode.com build
     bench --site dcode.com migrate
     
 Setting ERPNext for Production
@@ -189,6 +193,7 @@ Setting ERPNext for Production
     sudo ln -s /snap/bin/certbot /usr/bin/certbot 
     sudo certbot --nginx -d dcode.com
     
+    bench use dcode.com
 
 Open url https://dcode.com without the port to login
 
