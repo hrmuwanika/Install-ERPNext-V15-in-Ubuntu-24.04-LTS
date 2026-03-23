@@ -37,13 +37,13 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo apt-get install -y git pkg-config
 
 ### STEP 4 install python-dev
-    sudo apt-get install -y python3-dev python3.12-dev
+    sudo apt-get install -y python3-dev
 
 ### STEP 5 Install setuptools and pip (Python's Package Manager).
     sudo apt-get install -y python3-setuptools python3-pip
 
 ### STEP 6 Install virtualenv
-    sudo apt-get install -y python3.12-venv 
+    sudo apt-get install -y python3-venv 
     
 ### STEP 7 Install MariaDB
     sudo apt-get install -y software-properties-common 
@@ -81,7 +81,7 @@ add this to the 50-server.cnf file
     bind-address = 127.0.0.1
 
 ### Then, update character sets for compatibility:
-    sudo nano /etc/mysql/my.cnf
+    sudo bash -c 'cat << EOF >> /etc/mysql/my.cnf
 
     [mysqld]
     character-set-client-handshake = FALSE
@@ -90,31 +90,36 @@ add this to the 50-server.cnf file
      
     [mysql]
     default-character-set = utf8mb4
-
+    EOF
 
 ### Now press (Ctrl-X) to exit
     sudo systemctl restart mariadb
 
 ### STEP 10 install Redis
-    sudo apt-get install redis-server -y
+    sudo apt-get install -y redis-server
     sudo systemctl start redis-server
     sudo systemctl enable redis-server
     
-### STEP 11 install Node.js 24.X package
+### STEP 11 install Node.js 23.X package
     sudo apt install curl -y
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
     source ~/.profile
-    nvm install 24
+    nvm install 23
 
 ### STEP 12  install Yarn
     npm install -g npm@11.4.2
     sudo npm install -g yarn 
 
 ### STEP 13 install wkhtmltopdf (used for PDF reports in ERPNext)
-    sudo apt-get install -y xvfb libfontconfig
-    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-    sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-    sudo apt install -f -y
+    sudo apt-get install -y fontconfig libxrender1 xfonts-75dpi xfonts-base
+    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_"$arch".deb && \
+    sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_"$arch".deb || true && \
+    sudo cp /usr/local/bin/wkhtmlto* /usr/bin/ && \
+    sudo chmod a+x /usr/bin/wk* && \
+    sudo rm wkhtmltox_0.12.6.1-2.jammy_"$arch".deb && \
+    sudo apt --fix-broken install -y && \
+    sudo apt install -y fontconfig xvfb libfontconfig xfonts-base xfonts-75dpi libxrender1 
+
     
 ### Create Python Virtual Environment and Install Frappe Bench
     python3 -m venv myenv
