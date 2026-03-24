@@ -130,9 +130,10 @@ add this to the 50-server.cnf file
     bench --version
     
 ### STEP 15 initilise the frappe bench & install frappe latest version 
-    bench init --frappe-branch version-15 frappe-bench
+    bench init frappe-bench --frappe-branch version-15
     cd frappe-bench/
-    sudo chmod -R o+rx /home/frappe/
+    sudo chmod -R o+rx /home/frappe
+    sudo chown -R frappe:frappe /home/frappe/frappe-bench
     
 ### STEP 16 create a site in frappe bench 
 
@@ -173,13 +174,13 @@ add this to the 50-server.cnf file
 
 ### STEP 19 Setup production config
     sudo bench setup production frappe
+    bench config dns_multitenant on
     
 ### STEP 20 Setup NGINX to apply the changes
     bench setup nginx
     sudo supervisorctl restart all
-    sudo bench setup production frappe
-    sudo systemctl reload nginx    
-    sudo supervisorctl restart all
+    sudo service nginx restart
+    bench restart
 
 ### STEP 21 Install Letsencrypt ssl certificate 
     sudo apt-get install -y snapd
@@ -190,6 +191,9 @@ add this to the 50-server.cnf file
     sudo ln -s /snap/bin/certbot /usr/bin/certbot 
     sudo certbot --nginx -d dcode.com
     bench use dcode.com
+    
+### Update bench itself
+    bench update
 
 Open url https://dcode.com without the port to login
 
