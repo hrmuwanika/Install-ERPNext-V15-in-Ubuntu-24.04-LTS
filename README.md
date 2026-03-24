@@ -178,6 +178,8 @@ add this to the 50-server.cnf file
     
 ### STEP 20 Setup NGINX to apply the changes
     bench setup nginx
+
+### Restart Supervisor and Launch Production Mode
     sudo supervisorctl restart all
     sudo service nginx restart
     sudo bench setup production frappe
