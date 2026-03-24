@@ -36,8 +36,8 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
 ### STEP 3 Install git
     sudo apt-get install -y git pkg-config
 
-### STEP 4 install python-dev
-    sudo apt-get install -y python3-dev
+### STEP 4 install python3-dev
+    sudo apt-get install -y python3-dev python3-distutils
 
 ### STEP 5 Install setuptools and pip (Python's Package Manager).
     sudo apt-get install -y python3-setuptools python3-pip
@@ -55,22 +55,22 @@ A complete Guide to Install Frappe/ERPNext version 15  in Ubuntu 24.04 LTS
     sudo mysql_secure_installation
 
 ### Install Nginx
-    sudo apt-get install nginx -y
+    sudo apt-get install -y nginx
     sudo systemctl start nginx
     sudo systemctl enable nginx
 
 ### Install and setup Supervisor
-    sudo apt-get install supervisor -y
+    sudo apt-get install -y supervisor
     sudo systemctl start supervisor
     sudo systemctl enable supervisor
 
 ### Install Fail2ban
-    sudo apt-get install fail2ban -y
+    sudo apt-get install -y fail2ban
     sudo systemctl start fail2ban
     sudo systemctl enable fail2ban
 
 ### STEP 8  MySQL database development files
-    sudo apt-get install libmysqlclient-dev -y
+    sudo apt-get install -y libmysqlclient-dev
 
 ### STEP 9 Open the MariaDB server configuration , Update the bind-address:
     sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -81,7 +81,7 @@ add this to the 50-server.cnf file
     bind-address = 127.0.0.1
 
 ### Then, update character sets for compatibility:
-    sudo cat << EOF >> /etc/mysql/my.cnf
+    sudo cat <<EOF > /etc/mysql/my.cnf
 
     [mysqld]
     character-set-client-handshake = FALSE
@@ -101,7 +101,7 @@ add this to the 50-server.cnf file
     sudo systemctl enable redis-server
     
 ### STEP 11 install Node.js 23.X package
-    sudo apt install curl -y
+    sudo apt install -y curl
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
     source ~/.profile
     nvm install 23
@@ -130,14 +130,14 @@ add this to the 50-server.cnf file
     bench --version
     
 ### STEP 15 initilise the frappe bench & install frappe latest version 
-    bench init frappe-bench --frappe-branch version-15
+    bench init --frappe-branch version-15 frappe-bench
     cd frappe-bench/
     sudo chmod -R o+rx /home/frappe/
     
 ### STEP 16 create a site in frappe bench 
 
 >### Note 
->Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
+> Warning: MariaDB version ['10.11', '7'] is more than 10.8 which is not yet tested with Frappe Framework.
     
     bench new-site dcode.com
     bench --site dcode.com add-to-hosts
@@ -165,22 +165,19 @@ add this to the 50-server.cnf file
     bench --site dcode.com build
     bench --site dcode.com migrate
     
-Setting ERPNext for Production
+## Setting ERPNext for Production
 
 ### STEP 18 Enable Scheduler and Disable Maintenance Mode   
     bench --site dcode.com enable-scheduler
     bench --site dcode.com set-maintenance-mode off
 
-### STEP 19 Setup Production
-    bench setup env --python PATH="$PATH"
-    sudo -E env PATH="$PATH" bench setup sudoers $(whoami)
-    sudo -E env PATH="$PATH" bench setup production frappe
-    sudo systemctl reload nginx
+### STEP 19 Setup production config
+    sudo bench setup production frappe
     
-### STEP 20 Configure NGINX and Supervisor:
+### STEP 20 Setup NGINX to apply the changes
     bench setup nginx
     sudo supervisorctl restart all
-    sudo -E env PATH="$PATH" bench setup production frappe
+    sudo bench setup production frappe
     sudo systemctl reload nginx    
     sudo supervisorctl restart all
 
@@ -192,7 +189,6 @@ Setting ERPNext for Production
     sudo snap install --classic certbot
     sudo ln -s /snap/bin/certbot /usr/bin/certbot 
     sudo certbot --nginx -d dcode.com
-    
     bench use dcode.com
 
 Open url https://dcode.com without the port to login
