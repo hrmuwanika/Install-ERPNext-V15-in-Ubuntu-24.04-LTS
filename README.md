@@ -180,6 +180,7 @@ add this to the 50-server.cnf file
     bench setup nginx
     sudo supervisorctl restart all
     sudo service nginx restart
+    sudo bench setup production frappe
     bench restart
 
 ### STEP 21 Install Letsencrypt ssl certificate 
